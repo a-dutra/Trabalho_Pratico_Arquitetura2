@@ -46,8 +46,12 @@ def gerar_memoria_inicial(qtd_posicoes):
 
     return memoria
 
-print("Temperatura:", SensorClimatico(TipoSensor.TEMPERATURA).gerar_valor())
-print("Umidade:", SensorClimatico(TipoSensor.UMIDADE).gerar_valor())
-print("Pressão:", SensorClimatico(TipoSensor.PRESSAO).gerar_valor())
-print(gerar_valor_aleatorio(TipoSensor.VENTO))
+temp = SensorClimatico(TipoSensor.TEMPERATURA)
+umid = SensorClimatico(TipoSensor.UMIDADE)
+vento = SensorClimatico(TipoSensor.VENTO)
+
+print(temp.gerar_valor())
+print(umid.gerar_valor())
+print(vento.gerar_valor())
 print(gerar_valor_aleatorio(TipoSensor.UV))
+print(gerar_valor_aleatorio(TipoSensor.TEMPERATURA))
