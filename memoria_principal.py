@@ -38,6 +38,6 @@ class MemoriaPrincipal:
 
     def __repr__(self):
         buffer = ""
-        for i, (tipo, valor) in enumerate(self.memoria):
+        for i, (tipo, valor) in enumerate(self.memoria):7
             buffer += f"[{i:03}] {tipo.name:<12} {valor:.2f}\n"
         return buffer
