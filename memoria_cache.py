@@ -36,12 +36,28 @@ class MemoriaCache:
             buffer += f'\033[34mLinha {i}:\033[00m {self.memoria[i]}\n'
         return buffer
 
+    def procurar_linha(self,endereco):
+        '''Procura a linha que armazena o *endereco* na cache, retornando a linha se encontrada.
+        Caso a linha não seja encontrada, ou seja inválida, retorna None.
+        '''
+        tag= endereco//self.tamanho_linha #calcula número do bloco
+        for i in range(self.qntd_linhas):
+            if self.memoria[i].tag==tag and self.memoria[i].estado !=Estado.I:
+                return self.memoria[i] #HIT (retorna informações da linha)
+            return None
 
-    def procurar_linha(endereco):
-        pass
+    def ler(self, endereco):
+        '''Lê o dado no *endereço* da memória principal e se encontrar, retorna HIT.
+        Caso a cache não possua a linha que armazena o *endereço*, retorna MISS.
+        '''
+        #Procura linha dentro da cache
+        linha=self.procurar_linha(endereco)
 
-    def ler(endereco):
-        pass
+        #Qual indice corresponde ao endereço acessado
+        indice= endereco % self.tamanho_linha
+        if linha is not None and linha.estado != Estado.I:
+            return linha.dados[indice], Resposta.HIT
+        return None, Resposta.MISS
     
     def carregar_linha(bloco,endereco,estado):
         pass
