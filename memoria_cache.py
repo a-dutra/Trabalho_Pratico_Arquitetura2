@@ -60,8 +60,34 @@ class MemoriaCache:
             return linha.dados[indice], Resposta.HIT
         return None, Resposta.MISS
     
-    def carregar_linha(bloco,endereco,estado):
-        pass
+    def carregar_linha(self, bloco, endereco: int, estado: Estado):
+        '''pass'''
+        tag = endereco // self.tamanho_linha  #define em qual bloco esta armazenado o endereco 
+        for i in range (self.qntd_linhas):
+            if self.memoria[i].estado == Estado.I: #se a linha estiver no estado inválido, ou seja, possui uma linha "vazia" na cache, ai escreve 
+                self.memoria[i].tag = tag
+                self.memoria[i].estado = estado
+                self.memoria[i].dados = bloco.copy()
+                self.fila.append(i)
+                return
+        # Se a cache estiver cheia, aplica a política de substituição FIFO
+        index_removido = self.fila.pop(0)
+
+        # Se a linha a ser substituída estiver no estado MODIFIED, atualiza o bloco na memória principal
+        if self.memoria[index_removido].estado == Estado.M:
+            endereco_substituido = self.memoria[index_removido].tag * self.tamanho_linha
+            self.sistema.memoria_principal.atualizar_bloco(self.memoria[index_removido].dados, endereco_substituido)
+        # Se a linha a ser substituída estiver no estado FORWARD, alguma outra cache que possui o bloco e
+        # está no estado SHARED, irá para o estado FORWARD
+        elif self.memoria[index_removido].estado == Estado.F:
+            self.shared_para_forward(self.memoria[index_removido].tag)
+        self.memoria[index_removido].tag = tag
+        self.memoria[index_removido].dados = bloco
+        self.memoria[index_removido].estado = estado
+        self.fila.append(index_removido)
+
+    
+
 
     def atualizar_linha(self,endereco,dado):
         '''Atualiza o valor da linha com o novo valor *dado*'''
@@ -70,7 +96,7 @@ class MemoriaCache:
         for i in range (self.qntd_linhas):
             if self.memoria[i].tag == tag:
                 self.memoria[i].dados[endereco % self.tamanho_linha] = dado # encontra o bof que define a posicao onde o novo dado vai ser inserido e atualiza
-            return
+                return
 
 
     def invalidar_linha(self, endereco:int ):
