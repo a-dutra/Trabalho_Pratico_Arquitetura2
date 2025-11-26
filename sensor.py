@@ -17,15 +17,15 @@ class SensorClimatico:
         '''Gera valores realistas para cada tipo de sensor'''
 
         if self.tipo == TipoSensor.TEMPERATURA:
-            return random.uniform(-10, 40)  # °C
+            return round(random.uniform(-10, 40),0)  # °C
         elif self.tipo == TipoSensor.UMIDADE:
-            return random.uniform(0, 100)   # %
+            return round(random.uniform(0, 100),0)   # %
         elif self.tipo == TipoSensor.PRESSAO:
-            return random.uniform(950, 1050)  # hPa
+            return round(random.uniform(950, 1050),2)  # hPa
         elif self.tipo == TipoSensor.VENTO:
-            return random.uniform(0, 120)   # km/h
+            return round(random.uniform(0, 120),2)   # km/h
         elif self.tipo == TipoSensor.UV:
-            return random.uniform(0, 12)    # índice UV
+            return round(random.uniform(0, 12),2)    # índice UV
 
 
 def gerar_valor_aleatorio(tipo: TipoSensor):

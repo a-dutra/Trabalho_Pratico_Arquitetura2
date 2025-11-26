@@ -2,11 +2,11 @@ from enum import Enum
 
 #Estados possíveis de uma linha na cache
 class Estado(Enum):
-    MODIFIED = "Modified"
-    EXCLUSIVE = "Exclusive"
-    SHARED = "Shared"
-    INVALID = "Invalid"
-    FORWARD = "Forward"
+    M = "Modified"    #sera que aq nao é melhor colocar so as letras
+    E = "Exclusive"
+    S = "Shared"
+    I = "Invalid"
+    F = "Forward"
 
 class Resposta:
     HIT = 1
