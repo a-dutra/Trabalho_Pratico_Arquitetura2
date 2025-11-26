@@ -1,5 +1,6 @@
 from enum import Enum
 
+#Estados possíveis de uma linha na cache
 class Estado(Enum):
     MODIFIED = "Modified"
     EXCLUSIVE = "Exclusive"
@@ -12,12 +13,22 @@ class Resposta:
     MISS = 2   
 
 class Linha:
-    def __init__(self, tag, dados, estado):
-        self.tag= None
-        self.dados=None
-        self.estado= Estado.INVALID 
+    def __init__(self, tag= None, dados= None, estado= Estado.INVALID):
+        self.tag= tag
+        self.dados= dados
+        self.estado= estado
+
+    def __str__(self):
+        return  str(self.dados) + ' | Bloco: ' + str(self.tag) + ' | Estado: '+ self.estado.value
 
 class MemoriaCache:
     def __init__(self, tamanho, tamanho_linha,sistema):
         self.tamanho= tamanho
         self.tamanho_linha= tamanho_linha #Quantos endereços da RAM cabem dentro de uma linha da cache
+        
+
+linha = Linha()
+linha.tag=2
+linha.dados= [2,3,4]
+linha.estado= Estado.EXCLUSIVE
+print(linha)
