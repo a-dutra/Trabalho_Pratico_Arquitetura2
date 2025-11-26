@@ -14,7 +14,7 @@ class Resposta:
 
 class Linha:
     def __init__(self, tag= None, dados= None, estado= Estado.INVALID):
-        self.tag= tag
+        self.tag= tag 
         self.dados= dados
         self.estado= estado
 
