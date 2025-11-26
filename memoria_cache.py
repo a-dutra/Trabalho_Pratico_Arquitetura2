@@ -2,7 +2,7 @@ from enum import Enum
 
 #Estados possíveis de uma linha na cache
 class Estado(Enum):
-    M = "Modified"    #sera que aq nao é melhor colocar so as letras
+    M = "Modified"   
     E = "Exclusive"
     S = "Shared"
     I = "Invalid"
@@ -17,7 +17,7 @@ class Linha:
     def __init__(self, tag= None, dados= None, estado= Estado.I):
         self.tag= tag
         self.dados= dados
-        self.estado= estado
+        self.estado= Estado.I
 
     def __str__(self):
         return  str(self.dados) + ' | Bloco: ' + str(self.tag) + ' | Estado: '+ self.estado.value
@@ -85,8 +85,6 @@ class MemoriaCache:
         self.memoria[index_removido].dados = bloco
         self.memoria[index_removido].estado = estado
         self.fila.append(index_removido)
-
-    
 
 
     def atualizar_linha(self,endereco,dado):
