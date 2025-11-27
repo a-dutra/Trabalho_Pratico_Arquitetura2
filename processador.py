@@ -2,6 +2,7 @@ from memoria_cache import MemoriaCache, Resposta, Estado
 from memoria_principal import MemoriaPrincipal
 from sensor import TipoSensor
 from typing import Tuple
+from memoria_cache import MemoriaCache
 
 
 class Processador:
@@ -10,7 +11,6 @@ class Processador:
         self.cache = cache #cache particular de cada processador 
         self.memoria_principal = memoria_principal
         self.sistema = sistema #onde contem todas as caches dos outros processadores 
-
 
     def imprimir(self):
         '''Funcao necessária para a interação com o usuário, mostra as opções de escolha '''
@@ -83,10 +83,10 @@ class Processador:
 
     def ler(self, endereco: int):
         '''le um dado no *endereço* da memória'''
-        resposta = self.cache.ler(endereco) #chama o metodo ler da cahe local
+        resposta = self.cache.ler(endereco) #chama o metodo ler da cache local
         if resposta[1] == Resposta.HIT: #se a cache tem o dado
             print("Read Hit")
-            return resposta[0]
+            return resposta[0] #retorna o valor
         else: #se a cache local não tem o dado
             print("Read Miss")
             # procura em outras caches
