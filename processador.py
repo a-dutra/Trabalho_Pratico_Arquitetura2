@@ -107,24 +107,24 @@ class Processador:
                             linha.estado = Estado.F
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S)
                         return cache.ler(endereco)[0]
-            # se não achou em caches
+            #se não achou em caches
             print("Buscando na memória principal...")
             bloco = self.memoria_principal.buscar_bloco(endereco, self.cache.tamanho_linha) #procura o bloco inteiro na RAM
             self.cache.carregar_linha(bloco, endereco, Estado.E) #carrega o valor com estado E pois ninguém mais tem o bloco
             return self.memoria_principal.ler(endereco)
-    #CONFERIR ESSE 
+
     def escrever(self, endereco: int, dado: Tuple[TipoSensor, float]):
         '''Escreve um *dado* no endereço da memória'''
         linha = self.cache.procurar_linha(endereco)
         if linha is not None:
             print("Write Hit")
-            offset = endereco % self.cache.tamanho_linha
-            if linha.estado == Estado.M:
+            offset = endereco % self.cache.tamanho_linha #determinar qual linha escrever
+            if linha.estado == Estado.M: #o bloco esta na cache e já foi modificado
                 linha.dados[offset] = dado
-            elif linha.estado == Estado.E:
+            elif linha.estado == Estado.E: #o bloco está na cache e é exclusivo
                 linha.dados[offset] = dado
-                linha.estado = Estado.M
-            elif linha.estado in (Estado.S, Estado.F):
+                linha.estado = Estado.M #muda o estado 
+            elif linha.estado == Estado.F or linha.estado == Estado.S: #bloco é compartilhado
                 # invalidar outras caches
                 for cache in self.sistema.caches:
                     if cache != self.cache:
@@ -134,32 +134,32 @@ class Processador:
                 linha.estado = Estado.M
         else:
             print("Write Miss")
-            # procura em outras caches
+            #procura em outras caches
             for cache in self.sistema.caches:
                 if cache != self.cache:
-                    linha_out = cache.procurar_linha(endereco)
-                    if linha_out is not None:
+                    resposta = cache.procurar_linha(endereco)
+                    if resposta is not None:
                         print("Bloco encontrado em outra cache.")
-                        if linha_out.estado in (Estado.F, Estado.S, Estado.E):
-                            # invalidar todas
-                            for c in self.sistema.caches:
-                                if c != self.cache:
-                                    if c.procurar_linha(endereco) is not None:
-                                        c.invalidar_linha(endereco)
-                            self.cache.carregar_linha(linha_out.dados, endereco, Estado.M)
-                            # escreve
-                            linha_local = self.cache.procurar_linha(endereco)
+                        if resposta.estado == Estado.F or resposta.estado == Estado.S or resposta.estado == Estado.E :
+                            #invalidar todas
+                            for cache in self.sistema.caches:
+                                if cache != self.cache:
+                                    if cache.procurar_linha(endereco) is not None:
+                                        cache.invalidar_linha(endereco)
+                            self.cache.carregar_linha(resposta.dados, endereco, Estado.M) #se existe esse dado em outras caches devemos mudar o estado do dado para M
+                            #escreve o novo valor na linha 
+                            linha_local = self.cache.procurar_linha(endereco) 
                             linha_local.dados[endereco % self.cache.tamanho_linha] = dado
                             return
-                        elif linha_out.estado == Estado.M:
-                            # write-back
-                            endereco_sub = linha_out.tag * self.cache.tamanho_linha
-                            self.memoria_principal.atualizar_bloco(linha_out.dados, endereco_sub)
-                            linha_out.estado = Estado.I
-                            # continue procurar (ou ir pra RAM)
+                        elif resposta.estado == Estado.M:
+                            #write-back
+                            endereco_sub = resposta.tag * self.cache.tamanho_linha
+                            self.memoria_principal.atualizar_bloco(resposta.dados, endereco_sub) #atualiza a RAM com a versao mais recente do bloco
+                            resposta.estado = Estado.I #invalidar a linha da outra cache
                             break
-            # se não encontrou em caches -> buscar na RAM e carregar como MODIFIED
+            #se não encontrou em caches, busca na RAM e carrega como M
+            print("Buscando bloco na memória principal...")
             bloco = self.memoria_principal.buscar_bloco(endereco, self.cache.tamanho_linha)
-            self.cache.carregar_linha(bloco, endereco, Estado.M)
+            self.cache.carregar_linha(bloco, endereco, Estado.M) #carrega o bloco da RAM para a cache local
             linha_local = self.cache.procurar_linha(endereco)
-            linha_local.dados[endereco % self.cache.tamanho_linha] = dado
+            linha_local.dados[endereco % self.cache.tamanho_linha] = dado # escrita do dado dentro do bloco da cache
