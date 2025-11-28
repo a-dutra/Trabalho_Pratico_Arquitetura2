@@ -1,4 +1,3 @@
-
 from sistema import Sistema
 
 # Configurações gerais do sistema
