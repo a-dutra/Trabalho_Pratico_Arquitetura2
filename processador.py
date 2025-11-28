@@ -101,7 +101,7 @@ class Processador:
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S) 
                             linha.estado = Estado.F #cache analisada passa a ser 'F'
                         elif linha.estado == Estado.M: #uma unica cache tem o bloco e foi modificada
-                            # write-back antes de transferir (NÁO ENTENDI MTO BEM DESSA PARTE PARA BAIXO)
+                            # write-back antes de transferir 
                             endereco_sub = linha.tag * self.cache.tamanho_linha 
                             self.memoria_principal.atualizar_bloco(linha.dados, endereco_sub) 
                             linha.estado = Estado.F
