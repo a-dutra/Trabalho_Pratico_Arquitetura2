@@ -12,7 +12,7 @@ class Processador:
         self.memoria_principal = memoria_principal
         self.sistema = sistema #onde contem todas as caches dos outros processadores 
 
-    def imprimir(self):
+    def executar(self):
         '''Funcao necessária para a interação com o usuário, mostra as opções de escolha '''
 
         print(f"Processador {self.id} executando...")
@@ -109,7 +109,7 @@ class Processador:
                         return cache.ler(endereco)[0]
             #se não achou em caches
             print("Buscando na memória principal...")
-            bloco = self.memoria_principal.buscar_bloco(endereco, self.cache.tamanho_linha) #procura o bloco inteiro na RAM
+            bloco = self.memoria_principal.buscar_bloco(endereco)#procura o bloco inteiro na RAM
             self.cache.carregar_linha(bloco, endereco, Estado.E) #carrega o valor com estado E pois ninguém mais tem o bloco
             return self.memoria_principal.ler(endereco)
 

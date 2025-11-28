@@ -34,7 +34,7 @@ class MemoriaCache:
     def __str__(self):
         buffer = ''
         for i in range(self.qntd_linhas):
-            buffer += f'\033[34mLinha {i}:\033[00m {self.memoria[i]}\n'
+            buffer += f'Linha {i}:{self.memoria[i]}\n'
         return buffer
 
     def procurar_linha(self,endereco):
