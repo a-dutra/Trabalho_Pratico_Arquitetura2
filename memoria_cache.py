@@ -20,7 +20,19 @@ class Linha:
         self.estado= Estado.I
 
     def __str__(self):
-        return  str(self.dados) + ' | Bloco: ' + str(self.tag) + ' | Estado: '+ self.estado.value
+        if self.dados is None:
+            dados_str = "None"
+        else:
+            dados_str = ""
+            for i, item in enumerate(self.dados):
+                if item is None:
+                    dados_str += "None"
+                else:
+                    tipo, valor = item
+                    dados_str += f"({tipo.name}, {valor})"
+                if i < len(self.dados) - 1:
+                    dados_str += ", "
+        return f"{dados_str} | Bloco: {self.tag} | Estado: {self.estado.value}"
 
 class MemoriaCache:
     def __init__(self, tamanho, tamanho_linha,sistema):
@@ -34,7 +46,7 @@ class MemoriaCache:
     def __str__(self):
         buffer = ''
         for i in range(self.qntd_linhas):
-            buffer += f'\033[34mLinha {i}:\033[00m {self.memoria[i]}\n'
+            buffer += f'Linha {i}:{self.memoria[i]}\n'
         return buffer
 
     def procurar_linha(self,endereco):
@@ -103,10 +115,10 @@ class MemoriaCache:
         tag = endereco // self.tamanho_linha  #define em qual bloco esta armazenado o endereco 
         for i in range (self.qntd_linhas):
             if self.memoria[i].tag == tag:
-                self.memoria[i].estado == Estado.I #invalida o estado
-            if i in self.fila:
-                self.fila.remove(i) #remove a linha i da fila
-            return 
+                self.memoria[i].estado = Estado.I #invalida o estado
+                if i in self.fila:
+                    self.fila.remove(i) #remove a linha i da fila
+                return 
 
     def shared_para_forward(self, tag: int):
         '''Transforma uma linha S para F (a primeria que encontrar), em outra cache que compartilha a mesma linha '''

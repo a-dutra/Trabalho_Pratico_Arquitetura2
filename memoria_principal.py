@@ -8,6 +8,12 @@ class MemoriaPrincipal:
         #A RAM já começa preenchida com dados aleatórios
         self.memoria = gerar_memoria_inicial(tamanho)
 
+    def __str__(self):
+        buffer = "===== MEMÓRIA PRINCIPAL =====\n"
+        for i, (tipo, valor) in enumerate(self.memoria):
+            buffer += f"[{i:03}] {tipo.name:<12} {valor:.2f}\n"
+        return buffer
+
 
     def ler(self, endereco: int):
         """Retorna o dado no endereço da memória."""
@@ -35,13 +41,3 @@ class MemoriaPrincipal:
         inicio = (endereco // self.tamanho_bloco) * self.tamanho_bloco
         fim = inicio + self.tamanho_bloco
         self.memoria[inicio:fim] = bloco
-
-    def __str__(self):
-        buffer = "===== MEMÓRIA PRINCIPAL =====\n"
-        for i, (tipo, valor) in enumerate(self.memoria):
-            if tipo is None:
-                buffer += f"[{i:03}] {'VAZIO':<12} --\n"
-            else:
-                buffer += f"[{i:03}] {tipo.name:<12} {valor:.2f}\n"
-        return buffer
-
