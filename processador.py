@@ -77,7 +77,7 @@ class Processador:
 
                 dado = (tipo, valor) #constroi a tupla
                 self.escrever(endereco, dado)
-                print(f"Escrito em [{endereco}] = ({dado[0].name}, {dado[1]:.2f})")
+                print(f"Escrito em [{endereco:03}] = ({dado[0].name}, {dado[1]:.2f})")
 
                     
             else:
@@ -162,7 +162,6 @@ class Processador:
                             break
             #se não encontrou em caches, busca na RAM e carrega como M
             print("Buscando bloco na memória principal...")
-            bloco = self.memoria_principal.buscar_bloco(endereco, self.cache.tamanho_linha)
-            self.cache.carregar_linha(bloco, endereco, Estado.M) #carrega o bloco da RAM para a cache local
+            self.cache.carregar_linha(self.memoria_principal.buscar_bloco(endereco), endereco, Estado.M)
             linha_local = self.cache.procurar_linha(endereco)
             linha_local.dados[endereco % self.cache.tamanho_linha] = dado # escrita do dado dentro do bloco da cache
