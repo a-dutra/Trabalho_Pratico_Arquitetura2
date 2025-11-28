@@ -101,18 +101,21 @@ class Processador:
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S) 
                             linha.estado = Estado.F #cache analisada passa a ser 'F'
                         elif linha.estado == Estado.M: #uma unica cache tem o bloco e foi modificada
-                            # write-back antes de transferir (NÁO ENTENDI MTO BEM DESSA PARTE PARA BAIXO)
+                            # write-back antes de transferir 
                             endereco_sub = linha.tag * self.cache.tamanho_linha 
                             self.memoria_principal.atualizar_bloco(linha.dados, endereco_sub) 
                             linha.estado = Estado.F
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S)
                         return cache.ler(endereco)[0]
-            #se não achou em caches
+        
+            # Se não achou em caches
             print("Buscando na memória principal...")
-            bloco = self.memoria_principal.buscar_bloco(endereco)#procura o bloco inteiro na RAM
-            self.cache.carregar_linha(bloco, endereco, Estado.E) #carrega o valor com estado E pois ninguém mais tem o bloco
-            return self.memoria_principal.ler(endereco)
+            bloco = self.memoria_principal.buscar_bloco(endereco)  # procura o bloco inteiro na RAM
+            self.cache.carregar_linha(bloco, endereco, Estado.E)  # carrega o valor com estado E
+            tipo, valor = self.memoria_principal.ler(endereco)
+            print(f"Valor em [{endereco:03}] = ({tipo.name}, {valor:.2f})")
 
+            return tipo, valor
     def escrever(self, endereco: int, dado: Tuple[TipoSensor, float]):
         '''Escreve um *dado* no endereço da memória'''
         linha = self.cache.procurar_linha(endereco)
