@@ -14,7 +14,7 @@ class Sistema:
             self.processadores.append(processador)
 
     def executar(self):
-        print("\n ***** SIMULADOR DE UM SISTEMA DISTRIBUÍDO DE MONITORAMENTO CLIMÁTICO *****\n")
+        print("\n ===== SIMULADOR DE UM SISTEMA DISTRIBUÍDO DE MONITORAMENTO CLIMÁTICO =====\n")
 
         while True:
             print("Selecione uma estação climática para acessar:\n")

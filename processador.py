@@ -43,8 +43,9 @@ class Processador:
             elif escolha == '1':
                     endereco = int(input("Endereço: "))
                     print()
-                    valor = self.ler(endereco)
-                    print(f"\nValor em [{endereco}] = {valor}")
+                    tipo, valor = self.ler(endereco)  # desempacota a tupla retornada
+                    print(f"\nValor em [{endereco:03}] = ({tipo.name}, {valor:.2f})")
+
 
             #escreve
             elif escolha == '2':
@@ -76,7 +77,8 @@ class Processador:
 
                 dado = (tipo, valor) #constroi a tupla
                 self.escrever(endereco, dado)
-                print(f"Escrito em [{endereco}] = {dado}")
+                print(f"Escrito em [{endereco}] = ({dado[0].name}, {dado[1]:.2f})")
+
                     
             else:
                 print("Opção inválida.")
@@ -113,8 +115,6 @@ class Processador:
             bloco = self.memoria_principal.buscar_bloco(endereco)  # procura o bloco inteiro na RAM
             self.cache.carregar_linha(bloco, endereco, Estado.E)  # carrega o valor com estado E
             tipo, valor = self.memoria_principal.ler(endereco)
-            print(f"Valor em [{endereco:03}] = ({tipo.name}, {valor:.2f})")
-
             return tipo, valor
     def escrever(self, endereco: int, dado: Tuple[TipoSensor, float]):
         '''Escreve um *dado* no endereço da memória'''
