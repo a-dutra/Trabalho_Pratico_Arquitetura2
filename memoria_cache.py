@@ -57,7 +57,7 @@ class MemoriaCache:
         for i in range(self.qntd_linhas):
             if self.memoria[i].tag==tag and self.memoria[i].estado !=Estado.I:
                 return self.memoria[i] #HIT (retorna informações da linha)
-            return None
+        return None
 
     def ler(self, endereco):
         '''Lê o dado no *endereço* da memória principal e se encontrar, retorna HIT.
@@ -78,8 +78,8 @@ class MemoriaCache:
         for i in range (self.qntd_linhas):
             if self.memoria[i].estado == Estado.I: #se a linha estiver no estado inválido, ou seja, possui uma linha "vazia" na cache, ai escreve 
                 self.memoria[i].tag = tag
-                self.memoria[i].estado = estado
                 self.memoria[i].dados = bloco.copy()
+                self.memoria[i].estado = estado
                 self.fila.append(i)
                 return
         # Se a cache estiver cheia, aplica a política de substituição FIFO
