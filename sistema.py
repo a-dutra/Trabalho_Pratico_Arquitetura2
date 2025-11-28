@@ -14,6 +14,9 @@ class Sistema:
             self.processadores.append(processador)
 
     def executar(self):
+        ''' Inicia o menu interativo do sistema. Exibe a lista de estações climáticas (processadores), permite consultar
+        os dados armazenados na memória principal ou encerrar o simulador.'''
+
         print("\n ===== SIMULADOR DE UM SISTEMA DISTRIBUÍDO DE MONITORAMENTO CLIMÁTICO =====\n")
 
         while True:

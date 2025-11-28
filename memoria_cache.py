@@ -73,7 +73,10 @@ class MemoriaCache:
         return None, Resposta.MISS
     
     def carregar_linha(self, bloco, endereco: int, estado: Estado):
-        '''pass'''
+        '''Carrega um bloco da memória principal para a cache.
+        Esta função é utilizada quando ocorre um MISS. Ela insere o bloco
+        solicitado em alguma linha da cache'''
+        
         tag = endereco // self.tamanho_linha  #define em qual bloco esta armazenado o endereco 
         for i in range (self.qntd_linhas):
             if self.memoria[i].estado == Estado.I: #se a linha estiver no estado inválido, ou seja, possui uma linha "vazia" na cache, ai escreve 
