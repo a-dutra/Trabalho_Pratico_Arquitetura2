@@ -11,6 +11,7 @@ class TipoSensor(Enum):
 
 class SensorClimatico:
     def __init__(self, tipo: TipoSensor):
+        '''Inicializa o sensor'''
         self.tipo = tipo
 
     def gerar_valor(self):

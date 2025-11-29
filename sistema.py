@@ -4,6 +4,8 @@ from processador import Processador
 
 class Sistema:
     def __init__(self, qntd_processadores, tamanho_cache, tamanho_linha_cache,tamanho_memoria, tamanho_bloco):
+        '''Inicializa o sistema multiprocessado, criando a memória principal, 
+        as caches e os processadores'''
         self.memoria_principal= MemoriaPrincipal (tamanho_memoria, tamanho_bloco)
         self.caches= [MemoriaCache(tamanho_cache, tamanho_linha_cache, self)
             for _ in range(qntd_processadores)]
@@ -15,7 +17,7 @@ class Sistema:
 
     def executar(self):
         ''' Inicia o menu interativo do sistema. Exibe a lista de estações climáticas (processadores), permite consultar
-        os dados armazenados na memória principal ou encerrar o simulador.'''
+        os dados armazenados na memória principal ou encerrar o simulador'''
 
         print("\n ===== SIMULADOR DE UM SISTEMA DISTRIBUÍDO DE MONITORAMENTO CLIMÁTICO =====\n")
 
@@ -30,17 +32,17 @@ class Sistema:
 
             escolha = input("\n> ")
 
-            # Sair
+            # sair
             if escolha == 's':
                 print("Sistema finalizado.")
                 return
 
-            # Mostrar memória
+            # mostrar memória
             elif escolha == 'm':
                 print("Memória principal:\n")
                 print(self.memoria_principal)
 
-            # Verificar se é número
+            # verificar se é número
             elif escolha != "" and all('0' <= c <= '9' for c in escolha):
                 processador_id = int(escolha) - 1
 
@@ -49,6 +51,6 @@ class Sistema:
                 else:
                     print("\nOpção Inválida.")
 
-            # Qualquer outra coisa é inválida
+            # qualquer outra coisa é inválida
             else:
                 print("\nOpção Inválida.")

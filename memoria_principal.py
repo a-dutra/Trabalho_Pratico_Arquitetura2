@@ -2,6 +2,7 @@ from sensor import TipoSensor, gerar_memoria_inicial
 
 class MemoriaPrincipal:
     def __init__(self, tamanho: int, tamanho_bloco: int):
+        '''Inicializa a memória principal, definindo seu tamanho, o tamanho dos blocos e gerando os dados iniciais'''
         self.tamanho = tamanho
         self.tamanho_bloco = tamanho_bloco
 
@@ -9,6 +10,7 @@ class MemoriaPrincipal:
         self.memoria = gerar_memoria_inicial(tamanho)
 
     def __str__(self):
+        '''Representação textual da memória principal'''
         buffer = "===== MEMÓRIA PRINCIPAL =====\n"
         for i, (tipo, valor) in enumerate(self.memoria):
             buffer += f"[{i:03}] {tipo.name:<12} {valor:.2f}\n"
@@ -16,26 +18,26 @@ class MemoriaPrincipal:
 
 
     def ler(self, endereco: int):
-        """Retorna o dado no endereço da memória."""
+        '''Retorna o dado no endereço da memória'''
         if endereco >= self.tamanho:
             raise ValueError(f"Endereço {endereco} fora do limite ({self.tamanho}).")
         return self.memoria[endereco]
 
     def escrever(self, endereco: int, dado):
-        """Escreve um dado no endereço da memória."""
+        '''Escreve um dado no endereço da memória'''
         if endereco >= self.tamanho:
             raise ValueError(f"Endereço {endereco} fora do limite ({self.tamanho}).")
-        self.memoria[endereco] = dado #dado é uma tupla (TipoSensor, valor). É o que eu quero escrever na RAM
+        self.memoria[endereco] = dado #dado é uma tupla (TipoSensor, valor).
 
 
     def buscar_bloco(self, endereco: int):
-        """Retorna o bloco inteiro do endereço pedido."""
+        '''Retorna o bloco inteiro do endereço pedido'''
         inicio = (endereco // self.tamanho_bloco) * self.tamanho_bloco
         fim = inicio + self.tamanho_bloco
         return self.memoria[inicio:fim]
 
     def atualizar_bloco(self, bloco, endereco: int):
-        """Sobrescreve o bloco da RAM que contém o endereço."""
+        '''Sobrescreve o bloco da RAM que contém o endereço'''
 
         inicio = (endereco // self.tamanho_bloco) * self.tamanho_bloco
         fim = inicio + self.tamanho_bloco

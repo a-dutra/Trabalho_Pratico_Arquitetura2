@@ -6,6 +6,7 @@ from typing import Tuple
 
 class Processador:
     def __init__(self, id, cache, memoria_principal, sistema):
+        '''Inicializa um processador no sistema multiprocessado'''
         self.id = id
         self.cache = cache #cache particular de cada processador 
         self.memoria_principal = memoria_principal
@@ -63,7 +64,6 @@ class Processador:
                 dado = input("Escolha o tipo (número): ").strip() 
 
                 try:
-                    # tenta converter para inteiro
                     tipo_int = int(dado)
 
                     # verifica se o valor existe no enum
@@ -84,7 +84,7 @@ class Processador:
                     print("Valor inválido.")
                     continue
 
-                dado = (tipo, valor) #constroi a tupla
+                dado = (tipo, valor) 
                 self.escrever(endereco, dado)
                 print(f"Escrito em [{endereco:03}] = ({dado[0].name}, {dado[1]:.2f})")
                     
@@ -94,15 +94,15 @@ class Processador:
     def ler(self, endereco: int):
         '''le um dado no *endereço* da memória'''
 
-        resposta = self.cache.ler(endereco) #chama o metodo ler da cache local
-        if resposta[1] == Resposta.HIT: #se a cache tem o dado
+        resposta = self.cache.ler(endereco) 
+        if resposta[1] == Resposta.HIT: 
             print("Read Hit")
             return resposta[0] #retorna o valor
-        else: #se a cache local não tem o dado
+        else: # caso a cache local não ter o dado
             print("Read Miss")
             # procura em outras caches
             for cache in self.sistema.caches:
-                if cache != self.cache: #diferente da que esta chamando
+                if cache != self.cache: 
                     linha = cache.procurar_linha(endereco) 
                     if linha is not None:
                         print("Bloco encontrado em outra cache.")
@@ -110,7 +110,7 @@ class Processador:
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S) #mudança de valores na cache local
                         elif linha.estado == Estado.E:
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S) 
-                            linha.estado = Estado.F #cache analisada passa a ser 'F'
+                            linha.estado = Estado.F 
                         elif linha.estado == Estado.M: #uma unica cache tem o bloco e foi modificada
                             # write-back antes de transferir 
                             endereco_sub = linha.tag * self.cache.tamanho_linha 
@@ -119,10 +119,10 @@ class Processador:
                             self.cache.carregar_linha(linha.dados, endereco, Estado.S)
                         return cache.ler(endereco)[0]
         
-            # Se não achou em caches
+            # se não achou em caches
             print("Buscando na memória principal...")
             bloco = self.memoria_principal.buscar_bloco(endereco)  # procura o bloco inteiro na RAM
-            self.cache.carregar_linha(bloco, endereco, Estado.E)  # carrega o valor com estado E
+            self.cache.carregar_linha(bloco, endereco, Estado.E) 
             tipo, valor = self.memoria_principal.ler(endereco)
             return tipo, valor
         
@@ -132,13 +132,14 @@ class Processador:
         linha = self.cache.procurar_linha(endereco)
         if linha is not None:
             print("Write Hit")
-            offset = endereco % self.cache.tamanho_linha #determinar qual linha escrever
-            if linha.estado == Estado.M: #o bloco esta na cache e já foi modificado
+            offset = endereco % self.cache.tamanho_linha 
+            # caso o bloco esteja na cache
+            if linha.estado == Estado.M:
                 linha.dados[offset] = dado
-            elif linha.estado == Estado.E: #o bloco está na cache e é exclusivo
+            elif linha.estado == Estado.E: 
                 linha.dados[offset] = dado
-                linha.estado = Estado.M #muda o estado 
-            elif linha.estado == Estado.F or linha.estado == Estado.S: #bloco é compartilhado
+                linha.estado = Estado.M  
+            elif linha.estado == Estado.F or linha.estado == Estado.S: 
                 # invalidar outras caches
                 for cache in self.sistema.caches:
                     if cache != self.cache:
@@ -160,7 +161,7 @@ class Processador:
                                 if cache != self.cache:
                                     if cache.procurar_linha(endereco) is not None:
                                         cache.invalidar_linha(endereco)
-                            self.cache.carregar_linha(resposta.dados, endereco, Estado.M) #se existe esse dado em outras caches devemos mudar o estado do dado para M
+                            self.cache.carregar_linha(resposta.dados, endereco, Estado.M) #se existe esse dado em outras muda o estado do dado para M
                             #escreve o novo valor na linha 
                             linha_local = self.cache.procurar_linha(endereco) 
                             linha_local.dados[endereco % self.cache.tamanho_linha] = dado
@@ -169,10 +170,10 @@ class Processador:
                             #write-back
                             endereco_sub = resposta.tag * self.cache.tamanho_linha
                             self.memoria_principal.atualizar_bloco(resposta.dados, endereco_sub) #atualiza a RAM com a versao mais recente do bloco
-                            resposta.estado = Estado.I #invalidar a linha da outra cache
+                            resposta.estado = Estado.I
                             break
             #se não encontrou em caches, busca na RAM e carrega como M
             print("Buscando bloco na memória principal...")
             self.cache.carregar_linha(self.memoria_principal.buscar_bloco(endereco), endereco, Estado.M)
             linha_local = self.cache.procurar_linha(endereco)
-            linha_local.dados[endereco % self.cache.tamanho_linha] = dado # escrita do dado dentro do bloco da cache
+            linha_local.dados[endereco % self.cache.tamanho_linha] = dado 
