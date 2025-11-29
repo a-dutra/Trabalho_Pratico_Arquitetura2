@@ -37,7 +37,6 @@ class MemoriaPrincipal:
     def atualizar_bloco(self, bloco, endereco: int):
         """Sobrescreve o bloco da RAM que contém o endereço."""
 
-        #Também usado quando a cache quer escrever de volta na RAM (write-back):
         inicio = (endereco // self.tamanho_bloco) * self.tamanho_bloco
         fim = inicio + self.tamanho_bloco
         self.memoria[inicio:fim] = bloco
