@@ -2,7 +2,6 @@ from memoria_cache import MemoriaCache, Resposta, Estado
 from memoria_principal import MemoriaPrincipal
 from sensor import TipoSensor
 from typing import Tuple
-from memoria_cache import MemoriaCache
 
 
 class Processador:
