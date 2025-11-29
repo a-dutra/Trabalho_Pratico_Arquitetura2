@@ -26,12 +26,12 @@ class Sistema:
                 print(f"{i}: Estação {i}")
 
             print("m: Ver dados climáticos armazenados")
-            print("q: Sair")
+            print("s: Sair")
 
             escolha = input("\n> ")
 
             # Sair
-            if escolha == 'q':
+            if escolha == 's':
                 print("Sistema finalizado.")
                 return
 

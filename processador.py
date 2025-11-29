@@ -22,11 +22,11 @@ class Processador:
             print("2: Escrever")
             print("c: Mostrar cache")
             print("m: Mostrar memória principal")
-            print("q: Voltar")
+            print("v: Voltar")
 
             escolha = input("\n> ").strip()
             #volta
-            if escolha == 'q':
+            if escolha == 'v':
                 print("Processador finalizado.\n")
                 return
             #mostra a cache
@@ -63,9 +63,19 @@ class Processador:
                     print(f"{t.value}: {t.name}") #mostra as opcoes de sensores disponíveis
                 dado = input("Escolha o tipo (número): ").strip() 
 
-                if not dado.isdigit() or int(dado) not in [t.value for t in TipoSensor]: #ver isso aq 
+                try:
+                    # tenta converter para inteiro
+                    tipo_int = int(dado)
+
+                    # verifica se o valor existe no enum
+                    if tipo_int not in [t.value for t in TipoSensor]:
+                        raise ValueError
+
+                    tipo = TipoSensor(tipo_int)
+
+                except:
                     print("Tipo inválido.")
-                tipo = TipoSensor(int(dado))
+                    continue
 
                 # inserir valor que vai ser armazenado no sensor 
                 val_input = input("Valor (número): ").strip()
@@ -78,13 +88,13 @@ class Processador:
                 dado = (tipo, valor) #constroi a tupla
                 self.escrever(endereco, dado)
                 print(f"Escrito em [{endereco:03}] = ({dado[0].name}, {dado[1]:.2f})")
-
                     
             else:
                 print("Opção inválida.")
 
     def ler(self, endereco: int):
         '''le um dado no *endereço* da memória'''
+
         resposta = self.cache.ler(endereco) #chama o metodo ler da cache local
         if resposta[1] == Resposta.HIT: #se a cache tem o dado
             print("Read Hit")
@@ -116,8 +126,10 @@ class Processador:
             self.cache.carregar_linha(bloco, endereco, Estado.E)  # carrega o valor com estado E
             tipo, valor = self.memoria_principal.ler(endereco)
             return tipo, valor
+        
     def escrever(self, endereco: int, dado: Tuple[TipoSensor, float]):
         '''Escreve um *dado* no endereço da memória'''
+
         linha = self.cache.procurar_linha(endereco)
         if linha is not None:
             print("Write Hit")
